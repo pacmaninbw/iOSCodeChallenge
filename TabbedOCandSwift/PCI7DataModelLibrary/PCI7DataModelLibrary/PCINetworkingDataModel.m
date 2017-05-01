@@ -44,10 +44,10 @@
 - (NSURLSession *)createSession;
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error;
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)stockPriceData;
-- (void) setupAndStartdownloadStockPrice;
-- (NSString*) ParseDownoadedFileForStockPrice;
-- (void) createStockPriceFullFileSpec;
-- (NSString*) retrieveStringFromDownloadedFileByUrl;
+- (void)setupAndStartdownloadStockPrice;
+- (NSString*)ParseDownoadedFileForStockPrice;
+- (void)createStockPriceFullFileSpec;
+- (NSString*)retrieveStringFromDownloadedFileByUrl;
 
 @end
 
@@ -134,7 +134,7 @@
 }
 
 // Set up a delegate based HTTP download and start the download
-- (void) setupAndStartdownloadStockPrice {
+- (void)setupAndStartdownloadStockPrice {
     downloadHadErrors = NO;
     downloadFailedErrorString = nil;
     
@@ -174,7 +174,7 @@
  * The only relavent data is ,"l" : "80.11"
  * The data needs to be parsed so that it only returns 80.11
  */
-- (NSString*) retrieveStringFromDownloadedFileByUrl {
+- (NSString*)retrieveStringFromDownloadedFileByUrl {
     NSString* fileContents = nil;
     NSString* urlOfstockPriceFileFullFileSpec = [NSString stringWithFormat:@"file://%@", stockPriceFileFullFileSpec];
     NSURL *downloadedFile = [NSURL URLWithString:urlOfstockPriceFileFullFileSpec];
@@ -201,7 +201,7 @@
 // This is implemented without a check that the download task completed. Since the main operation
 // queue is being used rather than an alternate queue it is assumed that this program is
 // synchronous rather than asynchronous
-- (NSString*) ParseDownoadedFileForStockPrice {
+- (NSString*)ParseDownoadedFileForStockPrice {
     NSString* returnAmexStockPrice = nil;
     
     //  If there were errors, just report the errors, don't attempt to parse the data in the file
@@ -225,7 +225,7 @@
 //  The download is not performed in the background, it is a download initiated when the user
 //  clicks on the button. Any errors such as no connection, or the URL can't be reached are
 //  therefore reported to the user.
-- (NSString*) provideANetworkAccess {
+- (NSString*)provideANetworkAccess {
     NSString* networkAccessDisplayString = @"Network access not implemented yet";
     
     [self setupAndStartdownloadStockPrice];
@@ -246,7 +246,7 @@
     return networkAccessDisplayString;
 }
 
-- (void) createStockPriceFullFileSpec {
+- (void)createStockPriceFullFileSpec {
     // find a path to a writable directory to store the downloaded file. This is done once
     // so that button clicks are not affected by a directory search.
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -266,7 +266,7 @@
 // connection it would add more cost to the users data charges. Since the amount of data expected is
 // less than 1K in size, it shouldn't take more than 5 seconds to download. If it was larger than 1K
 // this would be implemented as a loop to repeated download the data in the background every 15 minutes.
-- (id) init {
+- (id)init {
     googleFinanceUrl = @"http://finance.google.com/finance/info?client=ig&q=NSE:AXP";
     downloadHadErrors = NO;
     downloadFailedErrorString = nil;

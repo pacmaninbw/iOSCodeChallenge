@@ -10,11 +10,11 @@
 
 @interface PCI7DataModelLibrary : NSObject
 
-- (id) init;
-- (BOOL) IsGpsAvailable;
-- (NSString *) provideGPSLocationData;
-- (NSString *) provideBatteryLevelAndState;
-- (NSString *) provideNetworkAccessData;
-- (UIAlertController*) provideGPSAlerters;
+- (id)init;
+- (BOOL)IsGpsAvailable;
+- (NSString *)provideGPSLocationData;
+- (NSString *)provideBatteryLevelAndState;
+- (NSString *)provideNetworkAccessData;
+- (UIAlertController*)provideGPSAlerters;
 
 @end

@@ -10,13 +10,13 @@
 
 @interface ObjectivCViewController ()
 
-- (UIButton *) makeAButton: (CGFloat) yButtonStart title: (NSString *) buttonTitle underSubview: (nullable UIView *) previousSiblingView;
-- (UILabel *) makeALablel: (CGFloat) yLabelStart height: (CGFloat) height underSubview: (nullable UIView *) previousSiblingView;
-- (void) addButtonAndLabels;
-- (void) setSubViewSizeVariablesBasedOnViewBounds;
-- (void) setLabelWithGPSLatitudeAndLongitudeWithTimeStampData;
-- (void) setLabelWithBatteryLevelAndState;
-- (void) setLabelActionNetwork;
+- (UIButton *)makeAButton: (CGFloat) yButtonStart title: (NSString *) buttonTitle underSubview: (nullable UIView *) previousSiblingView;
+- (UILabel *)makeALablel: (CGFloat) yLabelStart height: (CGFloat) height underSubview: (nullable UIView *) previousSiblingView;
+- (void)addButtonAndLabels;
+- (void)setSubViewSizeVariablesBasedOnViewBounds;
+- (void)setLabelWithGPSLatitudeAndLongitudeWithTimeStampData;
+- (void)setLabelWithBatteryLevelAndState;
+- (void)setLabelActionNetwork;
 
 @end
 
@@ -180,17 +180,11 @@
             // If the UIAlertView pointer is nil proceed with the displaying the latitude, longitude and timestamp.
             // If the UIAlertView has a value show the alert, the alert should contain a function to update data in the GPS model.
             // This will enable the user to approve of using WiFi or Radio triangulation when the GPS is not available.
-            /*
-             * BUG - title and message are not appearing in the alert, the buttons in the alert work as expected
-             *          clicking the YES button removes the warning message that there is no GPS hardware and just
-             *          returns the data. Clicking the no message displays displays the warning message every time.
-             */
             assert([NSThread isMainThread]);
             isFirstGpsClick = NO;
             UIAlertController* gpsAlert = [displayDataModel provideGPSAlerters];
             if (gpsAlert) {
                 [self presentViewController:gpsAlert animated:NO completion:nil];
-                return;
             }
         }
         actionString = [displayDataModel provideGPSLocationData];

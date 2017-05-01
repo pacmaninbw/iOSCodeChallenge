@@ -13,7 +13,7 @@
     UIDevice *thisDevice;
 }
 
-- (id) init {
+- (id)init {
     if (self = [super init]) {
         // To optimize performance of the calls to getBatteryLevelAndState, getBatterLevel, getBatteryState
         // get a pointer to the device only once and enable battery monitoring only once. Battery monitoring
@@ -30,7 +30,7 @@
 // getBatteryLevelAndState could have performed all of the operations, but I try to follow the Single
 // Responsibility Principle as well as the KISS principle.
 
-- (NSString *) provideBatteryLevelAndState {
+- (NSString *)provideBatteryLevelAndState {
     NSString *batteryStateAndLevel = nil;
     
     batteryStateAndLevel = [NSString stringWithFormat:@"%@\n%@", self.provideBatteryState, self.provideBatteryLevel];
@@ -38,7 +38,7 @@
     return batteryStateAndLevel;
 }
 
-- (NSString *) provideBatteryLevel {
+- (NSString *)provideBatteryLevel {
     NSString *batteryLevelString = nil;
     
     batteryLevelString = [NSString stringWithFormat:@"Battery Level = %0.2f", [thisDevice batteryLevel]];
@@ -46,7 +46,7 @@
     return batteryLevelString;
 }
 
-- (NSString *) provideBatteryState
+- (NSString *)provideBatteryState
 {
     NSString *batterStateString = nil;
     NSArray *batteryStateArray = @[

@@ -10,7 +10,7 @@
 
 @interface PCINetworkingDataModel : NSObject<NSURLSessionDataDelegate>
 
-- (id) init;
-- (NSString*) provideANetworkAccess;
+- (id)init;
+- (NSString*)provideANetworkAccess;
 
 @end

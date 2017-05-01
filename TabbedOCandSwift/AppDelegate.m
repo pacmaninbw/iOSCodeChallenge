@@ -19,7 +19,7 @@
 
 #pragma mark - The following functions were added or modified to implement a tabbed application implemented in swift and objective-c
 
-- (BOOL) dataModelLibraryInitialize {
+- (BOOL)dataModelLibraryInitialize {
     BOOL libraryCreatedAndInitialized = YES;
 
     if (!self.dataModelLibrary || !_dataModelLibrary) {
@@ -35,7 +35,7 @@
     return libraryCreatedAndInitialized;
 }
 
-- (BOOL) createTabBarAndViewControllers {
+- (BOOL)createTabBarAndViewControllers {
     ObjectivCViewController* objectiveVC = nil;
     SwiftViewController* swiftVC = nil;
     

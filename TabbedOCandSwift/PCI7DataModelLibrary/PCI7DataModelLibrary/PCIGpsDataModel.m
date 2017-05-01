@@ -13,10 +13,10 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
-- (void) initializeGPSHardwareExists;
-- (NSString*) dateFromLocation;
-- (NSString*) latitudeFromLocation;
-- (NSString*) longitudeFromLocation;
+- (void)initializeGPSHardwareExists;
+- (NSString*)dateFromLocation;
+- (NSString*)latitudeFromLocation;
+- (NSString*)longitudeFromLocation;
 
 @end
 
@@ -39,7 +39,7 @@
 
 #pragma mark - Private Functions
 
-- (void) initializeGPSHardwareExists {
+- (void)initializeGPSHardwareExists {
     if (lastReportedLocation) {
         // The GPS hardware provides better accuracy than WiFi or Radio triangulation.
         // Both horizontal and vertical accuracy will be greater than zero if the GPS hardware is available.
@@ -56,7 +56,7 @@
     }
 }
 
-- (NSString*) dateFromLocation {
+- (NSString*)dateFromLocation {
     NSString* dateString = nil;
     
     if (lastReportedLocation) {
@@ -70,7 +70,7 @@
     return dateString;
 }
 
-- (NSString*) latitudeFromLocation {
+- (NSString*)latitudeFromLocation {
     NSString* latitude = nil;
     
     if (lastReportedLocation) {
@@ -90,7 +90,7 @@
     return latitude;
 }
 
-- (NSString*) longitudeFromLocation {
+- (NSString*)longitudeFromLocation {
     NSString* longitude = nil;
     
     if (lastReportedLocation) {
@@ -128,18 +128,22 @@
     
 }
 
-- (BOOL) doesGPSHardWareExists {
+- (BOOL)doesGPSHardWareExists {
     return hardwareExistsOnDevice;
 }
 
 #pragma mark - public interfaces
 
-- (UIAlertController*) alertUserNoGPSHardware {
+/*
+ * This alert is generated here in the library so that the user interface doesn't need
+ * to know about the business logic. The yes/no buttons affect variables here in the
+ * library that should not be exposed to the user interface.
+ */
+- (UIAlertController*)alertUserNoGPSHardware {
     [NSThread isMainThread];
     UIAlertController *alertToPresent = nil;
     NSString* alertTitleString = @"GPS Alert";
     NSString* alertMessage = @"No GPS hardware use Triangulation?";
-    
     
     if (!hardwareExistsOnDevice && mustUseGPSHardware) {
         alertToPresent = [UIAlertController alertControllerWithTitle: alertTitleString message:alertMessage
@@ -155,7 +159,7 @@
     return alertToPresent;
 }
 
-- (NSString*) provideGPSLongitudeAndLatitudeWithTimeStamp {
+- (NSString*)provideGPSLongitudeAndLatitudeWithTimeStamp {
     NSString *gpsLongitudeAndLatitudeWithTimeStamp = nil;
 
 // There should be additional checks in this function, the problem statement said get GPS data, the GPS is not available on all
@@ -182,15 +186,15 @@
     return  gpsLongitudeAndLatitudeWithTimeStamp;
 }
 
-- (void) gpsSetMustUseGPSHardware {
+- (void)gpsSetMustUseGPSHardware {
     mustUseGPSHardware = YES;           // Not current checked.
 }
 
-- (void) gpsAllowWiFiOrRadioTriangulation {
+- (void)gpsAllowWiFiOrRadioTriangulation {
     mustUseGPSHardware = NO;           // Not current checked.
 }
 
-- (void) gpsSetHardwareExists {
+- (void)gpsSetHardwareExists {
     hardwareExistsOnDevice = NO;        // This value may be changed on the first or following location updates.
 }
 
@@ -208,7 +212,7 @@
 //      <key>NSLocationAlwaysUsageDescription</key>
 //      <string>This application requires location services to work</string>
 
-- (id) init {
+- (id)init {
     if (self = [super init]) {
         mustUseGPSHardware = YES;
         firstTimeGPSDataRequested = YES;

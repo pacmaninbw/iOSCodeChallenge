@@ -9,7 +9,7 @@
 
 @interface ObjectivCViewController : UIViewController
 
-- (id) init;
+- (id)init;
 
 
 @end

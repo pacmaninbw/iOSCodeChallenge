@@ -11,9 +11,9 @@
 
 @interface PCIBatteryDataModel : NSObject
 
-- (id) init;
-- (NSString *) provideBatteryLevelAndState;
-- (NSString *) provideBatteryLevel;
-- (NSString *) provideBatteryState;
+- (id)init;
+- (NSString *)provideBatteryLevelAndState;
+- (NSString *)provideBatteryLevel;
+- (NSString *)provideBatteryState;
 
 @end

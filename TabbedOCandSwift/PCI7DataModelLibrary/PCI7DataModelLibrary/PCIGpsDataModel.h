@@ -10,9 +10,9 @@
 
 @interface PCIGpsDataModel : NSObject
 
-- (id) init;
-- (BOOL) doesGPSHardWareExists;
-- (NSString*) provideGPSLongitudeAndLatitudeWithTimeStamp;
-- (UIAlertController*) alertUserNoGPSHardware;
+- (id)init;
+- (BOOL)doesGPSHardWareExists;
+- (NSString*)provideGPSLongitudeAndLatitudeWithTimeStamp;
+- (UIAlertController*)alertUserNoGPSHardware;
 
 @end

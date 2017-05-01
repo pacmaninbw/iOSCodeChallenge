@@ -12,6 +12,7 @@ import UIKit
     var displayButtonAction : UILabel?
     var screenTitle : UILabel?
     var displayDataModel : PCI7DataModelLibrary?
+    var isFirstGpsClick : Bool = true
     
     // The following variables are used in multiple functions. They are constant during the display of the super view
     // and control the size of the subviews. They should change when the orientation changes
@@ -44,6 +45,17 @@ import UIKit
         var actionString : String = "Testing Label Text"
         
         if (self.displayDataModel != nil) {
+            if (self.isFirstGpsClick) {
+                // Call to the DataModel library that receives a pointer UIAlertView object from the GPS library implementation
+                // If the UIAlertView pointer is nil proceed with the displaying the latitude, longitude and timestamp.
+                // If the UIAlertView has a value show the alert, the alert should contain a function to update data in the GPS model.
+                // This will enable the user to approve of using WiFi or Radio triangulation when the GPS is not available.
+                self.isFirstGpsClick = false;
+                let gpsAlert : UIAlertController? = self.displayDataModel!.provideGPSAlerters();
+                if (gpsAlert != nil) {
+                    self.present(gpsAlert!, animated:false, completion:nil);
+                }
+            }
             actionString = (self.displayDataModel?.provideGPSLocationData())!
         }
         else {

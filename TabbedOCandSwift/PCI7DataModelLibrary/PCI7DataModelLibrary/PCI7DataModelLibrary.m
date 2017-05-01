@@ -29,7 +29,7 @@
     BOOL unableToEstableConnection;
 }
 
-- (BOOL) IsGpsAvailable {
+- (BOOL)IsGpsAvailable {
     BOOL GpsIsAvailble = NO;
     
     if (gpsDataModel) {
@@ -39,7 +39,7 @@
     return GpsIsAvailble;
 }
 
-- (UIAlertController*) provideGPSAlerters {
+- (UIAlertController*)provideGPSAlerters {
     UIAlertController* gpsAlertController = nil;
     if (gpsDataModel) {
         gpsAlertController = gpsDataModel.alertUserNoGPSHardware;
@@ -48,7 +48,7 @@
     return gpsAlertController;
 }
 
-- (NSString *) provideGPSLocationData {
+- (NSString *)provideGPSLocationData {
     NSString *gpsLocationData = nil;
     
     if (gpsDataModel) {
@@ -61,7 +61,7 @@
     return gpsLocationData;
 }
 
-- (NSString *) provideBatteryLevelAndState {
+- (NSString *)provideBatteryLevelAndState {
     NSString *batteryLevelAndState = nil;
     
     if (batteryDataModel) {
@@ -74,7 +74,7 @@
     return batteryLevelAndState;
 }
 
-- (NSString *) provideNetworkAccessData {
+- (NSString *)provideNetworkAccessData {
     NSString *networkAccessData = nil;
     
     if (networkDataModel) {
@@ -93,7 +93,7 @@
     return networkAccessData;
 }
 
-- (id) init {
+- (id)init {
     if (self = [super init]) {
         batteryDataModel = [[PCIBatteryDataModel alloc] init];
         gpsDataModel = [[PCIGpsDataModel alloc] init];
