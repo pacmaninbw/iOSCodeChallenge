@@ -34,7 +34,7 @@ import UIKit
         viewElementVerticalSpace = verticalSpaceAvailableToUse / 14.0
         buttonHeight = viewElementVerticalSpace * 0.65
         buttonXInit = (selfWidth - viewElementWidth) / 2.0;
-        startingVerticalLocation = 295.0  // chosen based on experimentation in the simulator
+        startingVerticalLocation = 110.0  // chosen based on experimentation in the simulator
         displayLabelHeight = viewElementVerticalSpace * 3.0
     }
     

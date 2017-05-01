@@ -1,0 +1,113 @@
+UIAlertController title and message do not appear.
+
+The YES and NO buttons function work as expected, the only problem is that the question
+`No GPS hardware use Triangulation?` does not appear to inform the user what the alert is
+about. The application is tabbed.
+
+The entire code for the project including the xcode project files and Info.plist files can be
+found on GitHub, incase you want to build or debug it.
+https://github.com/pacmaninbw/iOSCodeChallenge
+
+The title and message of the UIAlertController do not appear for the following UIAlertController:
+
+    - (UIAlertController*) alertUserNoGPSHardware {
+        UIAlertController *alertToPresent = nil;
+        NSString* alertTitleString = @"GPS Alert";
+        NSString* alertMessage = @"No GPS hardware use Triangulation?";
+        
+        if (!hardwareExistsOnDevice && mustUseGPSHardware) {
+            alertToPresent = [UIAlertController alertControllerWithTitle: alertTitleString message:alertMessage
+                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* yesButton = [UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault
+                    handler:^(UIAlertAction * action) {mustUseGPSHardware = NO;}];
+            [alertToPresent addAction:yesButton];
+            UIAlertAction* noButton = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault
+                    handler:^(UIAlertAction * action) {mustUseGPSHardware = YES;}];
+            [alertToPresent addAction:noButton];
+        }
+        
+        return alertToPresent;
+    }
+
+I've also tried to embed the above code in the function that calls this library routine. The same problem occurs.
+
+    - (void) setLabelWithGPSLatitudeAndLongitudeWithTimeStampData {
+        NSString *actionString = nil;
+        
+        if (displayDataModel) {
+            if (isFirstGpsClick) {
+                // Call to the DataModel library that receives a pointer UIAlertView object from the GPS library implementation
+                // If the UIAlertView pointer is nil proceed with the displaying the latitude, longitude and timestamp.
+                // If the UIAlertView has a value show the alert, the alert should contain a function to update data in the GPS model.
+                // This will enable the user to approve of using WiFi or Radio triangulation when the GPS is not available.
+                /*
+                 * BUG - title and message are not appearing in the alert, the buttons in the alert work as expected
+                 *          clicking the YES button removes the warning message that there is no GPS hardware and just
+                 *          returns the data. Clicking the no message displays displays the warning message every time.
+                 */
+                isFirstGpsClick = NO;
+                UIAlertController* gpsAlert = [displayDataModel provideGPSAlerters];
+                if (gpsAlert) {
+                    [self presentViewController:gpsAlert animated:NO completion:nil];
+                    return;
+                }
+            }
+            actionString = [displayDataModel provideGPSLocationData];
+        }
+        else {
+            actionString = @"GPS Button Action Failure: Data Model not created";
+        }
+        
+        [displayButtonAction setText:actionString];
+    }
+
+I've also tried moving the embedded code into the following 2 functions
+
+    - (void)viewWillLayoutSubviews {
+        /*
+         * Get the tab bar height from the Application Delegate so that the total vertical space
+         * can be calculated.
+         */
+        AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+        if (appDelegate) {
+            UITabBarController *TempTabBar = appDelegate.tabBarController;
+            if (TempTabBar) {
+                // Tab Bar Height is larger than myDelegate.tabBarController.tabBar.frame.size.height indicates
+                tabBarHeight = TempTabBar.tabBar.frame.size.height * 2.5;
+            }
+        }
+        
+        [self setSubViewSizeVariablesBasedOnViewBounds];
+        [self addButtonAndLabels];
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
+    
+    - (void)viewDidLoad {
+        [super viewDidLoad];
+        
+        if (self.displayModelLibraryInitialization) {
+            NSLog(@"In Objective-C Implementation viewDidLoad - unable to initialize displayModelLibrary");
+        }
+    }
+
+When I move the UIAlertController into viewWillLayoutSubviews() or viewDidLoad() I get the black screen, not
+the alert and not the buttons and labels that should be there.
+
+This question does not apply because the current problem is in Objective-c and not Swift.
+http://stackoverflow.com/questions/37621525/uialertcontroller-title-and-message-not-appearing
+
+This question does not apply because no textfield is getting updated.
+http://stackoverflow.com/questions/32843826/uialertcontroller-with-uitextfield-does-not-display-title-and-message
+
+The code does not use alert builder so this question doesn't apply.
+http://stackoverflow.com/questions/36849596/alert-dialogue-title-and-message-are-not-shown
+
+**Background**
+
+I am new to programming in Xcode, iOS, Objective-c and Swift. This is my first iOS project. It was
+an interview coding challenge.
+
+OSX - El Capitan
+Xcode - Version 8.2 (8C38)
+Running in the simulator.
+

@@ -135,9 +135,11 @@
 #pragma mark - public interfaces
 
 - (UIAlertController*) alertUserNoGPSHardware {
+    [NSThread isMainThread];
     UIAlertController *alertToPresent = nil;
     NSString* alertTitleString = @"GPS Alert";
     NSString* alertMessage = @"No GPS hardware use Triangulation?";
+    
     
     if (!hardwareExistsOnDevice && mustUseGPSHardware) {
         alertToPresent = [UIAlertController alertControllerWithTitle: alertTitleString message:alertMessage

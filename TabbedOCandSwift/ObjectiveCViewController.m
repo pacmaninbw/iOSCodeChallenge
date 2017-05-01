@@ -49,7 +49,7 @@
 #pragma mark - Set up subviews (buttons and labels)
 
 // Set the button and label sizes, preferrable based on device orientation and size
-- (void) setSubViewSizeVariablesBasedOnViewBounds {
+- (void)setSubViewSizeVariablesBasedOnViewBounds {
     selfWidth = self.view.bounds.size.width;
     verticalSpaceAvailableToUse = self.view.bounds.size.height - tabBarHeight;
     viewElementVerticalSpace = verticalSpaceAvailableToUse / 14.0;
@@ -58,11 +58,11 @@
     buttonYCenterOffset = buttonHeight / 2.0;
     buttonXCenter = selfWidth / 2.0;
     buttonXInit = (selfWidth - viewElementWidth) / 2.0;
-    startingVerticalLocation = 295.0;           // Chosen based on experimentation in the simulator
+    startingVerticalLocation = 110.0;           // Chosen based on experimentation in the simulator
     displayLabelHeight = 3.0 * viewElementVerticalSpace;
 }
 
-- (UILabel *) makeALablel: (CGFloat) yLabelStart height: (CGFloat) height underSubview: (nullable UIView *) previousSiblingView
+- (UILabel *)makeALablel: (CGFloat) yLabelStart height: (CGFloat) height underSubview: (nullable UIView *) previousSiblingView
 {
     UILabel* thisLabel;
 
@@ -86,7 +86,7 @@
 // Create a button with the starting y coordinate, the button title, and the sibling view to appear under the first item passed in
 // may not have a sibling subview, but all following buttons should have a previous sibling view.
 // The target action is not set in this function, I haven't found documentation on how to pass a function into a function.
-- (UIButton *) makeAButton: (CGFloat) yButtonStart title: (NSString *) buttonTitle underSubview: (nullable UIView *) previousSiblingView
+- (UIButton *)makeAButton: (CGFloat) yButtonStart title: (NSString *) buttonTitle underSubview: (nullable UIView *) previousSiblingView
 {
     UIButton *thisButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [thisButton setFrame:CGRectMake(buttonXInit, yButtonStart, viewElementWidth, buttonHeight)];
@@ -110,7 +110,7 @@
 // to null by the calling function.
 // TODO: Put the titles, previous subviews and, object types and action selectors into a table and loop through the table.
 
-- (void) addButtonAndLabels {
+- (void)addButtonAndLabels {
     if (selfWidth < 1.0) {
         return;
     }
@@ -170,11 +170,11 @@
 }
 
 #pragma mark - Button Action functions
-- (void) setLabelWithGPSLatitudeAndLongitudeWithTimeStampData {
+
+- (void)setLabelWithGPSLatitudeAndLongitudeWithTimeStampData {
     NSString *actionString = nil;
     
     if (displayDataModel) {
-#if 0
         if (isFirstGpsClick) {
             // Call to the DataModel library that receives a pointer UIAlertView object from the GPS library implementation
             // If the UIAlertView pointer is nil proceed with the displaying the latitude, longitude and timestamp.
@@ -185,6 +185,7 @@
              *          clicking the YES button removes the warning message that there is no GPS hardware and just
              *          returns the data. Clicking the no message displays displays the warning message every time.
              */
+            assert([NSThread isMainThread]);
             isFirstGpsClick = NO;
             UIAlertController* gpsAlert = [displayDataModel provideGPSAlerters];
             if (gpsAlert) {
@@ -192,7 +193,6 @@
                 return;
             }
         }
-#endif
         actionString = [displayDataModel provideGPSLocationData];
     }
     else {
@@ -202,7 +202,7 @@
     [displayButtonAction setText:actionString];
 }
 
-- (void) setLabelWithBatteryLevelAndState {
+- (void)setLabelWithBatteryLevelAndState {
     NSString *actionString = nil;
     
     if (displayDataModel) {
@@ -216,7 +216,7 @@
     
 }
 
-- (void) setLabelActionNetwork {
+- (void)setLabelActionNetwork {
     NSString *actionString = nil;
     
     if (displayDataModel) {
@@ -240,7 +240,7 @@
     }
 }
 
-- (BOOL) displayModelLibraryInitialization {
+- (BOOL)displayModelLibraryInitialization {
     // If the data model library is nil then get the pointer to the data library from the application delegate
     // The data model library should be created only once in the application delegate while the application launches.
     
@@ -255,7 +255,7 @@
     [super didReceiveMemoryWarning];
 }
 
-- (id) init {
+- (id)init {
     self = [super init];
     isFirstGpsClick = YES;
     getGPSLongitudeAndLatitudeWithTimeStamp = nil;
