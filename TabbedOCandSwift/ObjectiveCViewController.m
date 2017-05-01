@@ -174,7 +174,6 @@
     NSString *actionString = nil;
     
     if (displayDataModel) {
-#if 0
         if (isFirstGpsClick) {
             // Call to the DataModel library that receives a pointer UIAlertView object from the GPS library implementation
             // If the UIAlertView pointer is nil proceed with the displaying the latitude, longitude and timestamp.
@@ -192,7 +191,6 @@
                 return;
             }
         }
-#endif
         actionString = [displayDataModel provideGPSLocationData];
     }
     else {
