@@ -1,0 +1,547 @@
+Swift UIViewController init not executing when called from Objective-C AppDelegate
+
+The init function for the SwiftViewController object is not executing (I'm not covinced it is even
+called)). I have set a break point in the init function and the debugger never stops there. This
+project is not using story boards, xib or nib files. I have made init `public` as suggested in this
+question.
+http://stackoverflow.com/questions/26470771/swift-init-not-visible-in-objecitve-c
+
+The Objective-c UIViewController is working just fine, so I can see one of the tabs.
+
+All pointers and values in the SwiftViewController object are nil or zero when I step through the
+AppDelegate code in didFinishLaunchingWithOptions and its sub-functions. So the object is created,
+but not initialized.
+
+*The SwiftViewController works perfectly in a stand alone Swift application.*
+
+Am I missing anything in the header files? What do I need to do to execute the call to init in the AppDelegate?
+
+I have examined the following questions here on SO
+http://stackoverflow.com/questions/26702948/swift-uiviewcontroller-init
+http://stackoverflow.com/questions/24078043/call-swift-function-from-objective-c-class
+http://stackoverflow.com/questions/31804006/starting-ios-project-without-storyboard
+http://stackoverflow.com/questions/11931665/call-method-from-initialized-uiviewcontroller-in-storyboarding-objective-c
+http://stackoverflow.com/questions/5082738/ios-calling-app-delegate-method-from-viewcontroller
+http://stackoverflow.com/questions/29996192/call-swift-viewcontroller-from-obj-c-didselectionrow
+http://stackoverflow.com/questions/29996192/call-swift-viewcontroller-from-obj-c-didselectionrow
+http://stackoverflow.com/questions/26753925/set-initial-viewcontroller-in-appdelegate-swift
+http://stackoverflow.com/questions/28206753/swift-how-to-call-overrided-init-method-of-objective-c-class-from-swift-class
+http://stackoverflow.com/questions/25923190/how-to-call-swift-initializer-that-has-a-parameter-from-objective-c
+
+**Background**
+
+OSX - El Capitan
+Xcode - Version 8.2 (8C38)
+Running in the simulator.
+
+Programming Challenge:
+Create a static library or iOS Framework using Objective-C that performs the following 3 functions:
+- Collects the GPS location (latitude and longitude) of the user at a point in time
+- Collects the battery state and returns whether or not the device is plugged in and what percentage of life is left.
+- Accesses any publicly available, free API to collect the data of your choice and returns it
+       (this should be a network call)
+
+Build a simple application with 3 buttons and a label where text can be displayed. Each button should
+call into the three functions of the library described above and output the response to the label.
+Your application should consist of two tabs, one written in Objective-C and one written in Swift.
+Both tabs should call into the same Objective-C library and perform the same function.
+
+Only use Apple frameworks to complete this task. Fully comment your code explaining your logic and choices
+where multiple choices are available. For example, Apple provides numerous ways to retrieve a network
+resource, document why you choose the solution you did.
+
+Please send me the full SINGLE Xcode project.
+
+**Info.plist**
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+    	<key>CFBundleDevelopmentRegion</key>
+    	<string>en</string>
+    	<key>CFBundleExecutable</key>
+    	<string>$(EXECUTABLE_NAME)</string>
+    	<key>CFBundleIdentifier</key>
+    	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    	<key>CFBundleInfoDictionaryVersion</key>
+    	<string>6.0</string>
+    	<key>CFBundleName</key>
+    	<string>$(PRODUCT_NAME)</string>
+    	<key>CFBundlePackageType</key>
+    	<string>APPL</string>
+    	<key>CFBundleShortVersionString</key>
+    	<string>1.0</string>
+    	<key>CFBundleVersion</key>
+    	<string>1</string>
+    	<key>LSRequiresIPhoneOS</key>
+    	<true/>
+    	<key>NSAppTransportSecurity</key>
+    	<dict>
+    		<key>NSAllowsArbitraryLoads</key>
+    		<true/>
+    	</dict>
+    	<key>NSLocationAlwaysUsageDescription</key>
+    	<string>This application requires location services to work</string>
+    	<key>NSLocationWhenInUseUsageDescription</key>
+    	<string>This will be used to obtain your current location.</string>
+    	<key>UIRequiredDeviceCapabilities</key>
+    	<array>
+    		<string>armv7</string>
+    	</array>
+    	<key>UISupportedInterfaceOrientations</key>
+    	<array>
+    		<string>UIInterfaceOrientationPortrait</string>
+    		<string>UIInterfaceOrientationLandscapeLeft</string>
+    		<string>UIInterfaceOrientationLandscapeRight</string>
+    	</array>
+    	<key>UISupportedInterfaceOrientations~ipad</key>
+    	<array>
+    		<string>UIInterfaceOrientationPortrait</string>
+    		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+    		<string>UIInterfaceOrientationLandscapeLeft</string>
+    		<string>UIInterfaceOrientationLandscapeRight</string>
+    	</array>
+    </dict>
+    </plist>
+
+**AppDelegate.m**
+
+    //
+    //  AppDelegate.m
+    //  TabbedOCandSwift
+    //
+    //  Created by Paul Chernick on 4/18/17.
+    //
+    
+    #import "AppDelegate.h"
+    #import "ObjectiveCViewController.h"
+    #import "TabbedOCandSwift-Swift.h"
+    
+    @interface AppDelegate ()
+    
+    @end
+    
+    @implementation AppDelegate
+    
+    @synthesize dataModelLibrary = _dataModelLibrary;
+    
+    - (BOOL) dataModelLibraryInitialize {
+        BOOL libraryCreatedAndInitialized = YES;
+    
+        if (!self.dataModelLibrary || !_dataModelLibrary) {
+            PCI7DataModelLibrary *tempLibPtr = [[PCI7DataModelLibrary alloc] init];
+            if (!tempLibPtr) {
+                // If the library can't be allocated or initialized none of the buttons will work in any view controller.
+                NSLog(@"application didFinishLaunchingWithOptions: Unable to alloc or init the PCI7DataModelLibrary object");
+                return NO;
+            }
+            _dataModelLibrary = tempLibPtr;
+        }
+    
+        return libraryCreatedAndInitialized;
+    }
+    
+    - (BOOL) createTabBarAndViewControllers {
+        ObjectivCViewController* objectiveVC = nil;
+        SwiftViewController* swiftVC = nil;
+        
+        self.tabBarController = [[UITabBarController alloc] init];
+        
+        objectiveVC = [[ObjectivCViewController alloc] init];
+        if (objectiveVC) {
+            [objectiveVC setTitle:@"Objective-C"];
+        }
+        else {
+            NSLog(@"In AppDelegate.createTabBarAndViewControllers: Unable to create objectiveVC");
+            return NO;
+        }
+        
+        swiftVC = [[SwiftViewController alloc] init];
+        if (swiftVC) {
+            [swiftVC setTitle:@"Swift"];
+        }
+        else {
+            NSLog(@"In AppDelegate.createTabBarAndViewControllers: Unable to create swiftVC");
+            return NO;
+        }
+        
+    //    NSArray* controllers = [NSArray arrayWithObjects:objectiveVC, swiftVC,  nil];
+        NSArray* controllers = [NSArray arrayWithObjects:swiftVC, objectiveVC,  nil];
+        self.tabBarController.viewControllers = controllers;
+        self.tabBarController.selectedIndex = 0;
+        
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        self.window.rootViewController = self.tabBarController;
+        [self.window makeKeyAndVisible];
+        
+        return YES;
+    }
+    
+    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+        // Create the library object if it hasn't already been created
+        // There should only be one copy of the library.
+        //      - Reduce memory usage, devices have limitied memory, no app should use more than it needs and only one library is necessary.
+        //      - There is a runtime cost to starting up the library, if it is done once early in the life of the application
+        //          the user will notice it less than when a viewcontroller starts or resumes.
+        //      - There is asyncronous code that runs in the library in a serial manner to reduce possible interactions and prevent deadlock only one library should exist.
+        if (![self dataModelLibraryInitialize]) {
+            // If the library can't be allocated or initialized none of the buttons will work in any view controller.
+            NSLog(@"application didFinishLaunchingWithOptions: Unable to alloc or init the PCI7DataModelLibrary object");
+            return NO;
+        }
+        if (![self createTabBarAndViewControllers]) {
+            return NO;
+        }
+        
+        return YES;
+    }
+    
+    - (void)applicationWillResignActive:(UIApplication *)application {
+        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    }
+    
+    
+    - (void)applicationDidEnterBackground:(UIApplication *)application {
+        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    }
+    
+    
+    - (void)applicationWillEnterForeground:(UIApplication *)application {
+        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    }
+    
+    
+    - (void)applicationDidBecomeActive:(UIApplication *)application {
+        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    }
+    
+    
+    - (void)applicationWillTerminate:(UIApplication *)application {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        // Saves changes in the application's managed object context before the application terminates.
+        [self saveContext];
+    }
+    
+    
+    #pragma mark - Core Data stack
+    
+    @synthesize persistentContainer = _persistentContainer;
+    
+    - (NSPersistentContainer *)persistentContainer {
+        // The persistent container for the application. This implementation creates and returns a container, having loaded the store for the application to it.
+        @synchronized (self) {
+            if (_persistentContainer == nil) {
+                _persistentContainer = [[NSPersistentContainer alloc] initWithName:@"DevAndNetInfo2"];
+                [_persistentContainer loadPersistentStoresWithCompletionHandler:^(NSPersistentStoreDescription *storeDescription, NSError *error) {
+                    if (error != nil) {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                        
+                        /*
+                         Typical reasons for an error here include:
+                         * The parent directory does not exist, cannot be created, or disallows writing.
+                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                         * The device is out of space.
+                         * The store could not be migrated to the current model version.
+                         Check the error message to determine what the actual problem was.
+                        */
+                        NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+                        abort();
+                    }
+                }];
+            }
+        }
+        
+        return _persistentContainer;
+    }
+    
+    #pragma mark - Core Data Saving support
+    
+    - (void)saveContext {
+        NSManagedObjectContext *context = self.persistentContainer.viewContext;
+        NSError *error = nil;
+        if ([context hasChanges] && ![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+            abort();
+        }
+    }
+    
+    @end
+
+**AppDelegate.h**
+
+
+    //
+    //  AppDelegate.h
+    //  DevAndNetInfo2
+    //
+    //  Created by Paul Chernick on 4/18/17.
+    //
+    
+    #import <UIKit/UIKit.h>
+    #import <CoreData/CoreData.h>
+    #import "PCI7DataModelLibrary/PCI7DataModelLibrary/PCI7DataModelLibrary.h"
+    
+    
+    @interface AppDelegate : UIResponder <UIApplicationDelegate>
+    
+    @property (strong, nonatomic) UIWindow *window;
+    
+    @property (readonly, strong) NSPersistentContainer *persistentContainer;
+    
+    @property (strong) UITabBarController *tabBarController;
+    
+    // Create the library as a property so that consumer objects can use a getter to receive a pointer to it.
+    // Prevent objects that use the library from changing it.
+    @property (readonly, strong) PCI7DataModelLibrary *dataModelLibrary;
+    
+    - (void)saveContext;
+    
+    
+    @end
+    
+
+**TabbedOCandSwift-Bridging-Header.h**
+
+    //
+    //  Use this file to import your target's public headers that you would like to expose to Swift.
+    //
+    
+    #import "AppDelegate.h"
+
+**SwiftViewController.swift**
+
+    //
+    //  SwiftViewController.swift
+    //  SwiftTabForApp
+    //
+    
+    import UIKit
+    
+    @objc class SwiftViewController: UIViewController {
+        
+        class SwiftViewController: UIViewController {
+            var getGPSLongitudeAndLatitudeWithTimeStamp : UIButton?
+            var getBatteryLevelAndState : UIButton?
+            var getNextorkImplementation : UIButton?
+            var displayButtonAction : UILabel?
+            var screenTitle : UILabel?
+            var displayDataModel : PCI7DataModelLibrary?
+            
+            // The following variables are used in multiple functions. They are constant during the display of the super view
+            // and control the size of the subviews. They should change when the orientation changes
+            var selfWidth : CGFloat = 0.0
+            var buttonHeight : CGFloat = 0.0
+            var viewElementWidth : CGFloat = 0.0
+            var buttonYCenterOffset : CGFloat = 0.0       // The y center should be half the value of the height
+            var buttonXCenter : CGFloat = 0.0             // Center the button title relative to the width of the button and the width of the super view
+            var buttonXInit : CGFloat = 0.0
+            var buttonVerticalSeparation : CGFloat = 0.0
+            var startingVerticalLocation : CGFloat = 0.0
+            var displayLabelHeight: CGFloat = 75.0
+            
+            // TODO: This function should be altered so that all values are calculated on screen height and screen width,
+            //      this will allow for changes in orientation.
+            func initFramingValuesOfMyDisplay() {
+                selfWidth = self.view.bounds.size.width
+                buttonHeight = 20.0               // This should be programmable in relative to self.view.bounds.size.height
+                viewElementWidth = 0.85 * selfWidth;
+                buttonXCenter = selfWidth / 2.0;   // Center the button title relative to the width of the button and the width of the super view
+                buttonXInit = (selfWidth - viewElementWidth) / 2.0;      // 10 percent margin on the left leaves a 10% margin on the right as well
+                buttonYCenterOffset = buttonHeight / 2.0; // The y center should be half the value of the height
+                buttonVerticalSeparation = buttonHeight + buttonYCenterOffset;
+                startingVerticalLocation = 250.0;  // 430 was chosen based on experimentation in the simulator
+            }
+            
+            // This function is called when the getGPSLongitudeAndLatitudeWithTimeStamp button is receives the touchUpInside event.
+            func setLabelWithGPSLatitudeAndLongitudeWithTimeStampData()
+            {
+                var actionString : String = "Testing Label Text"
+                
+                if (self.displayDataModel != nil) {
+                    actionString = (self.displayDataModel?.provideGPSLocationData())!
+                }
+                else {
+                    actionString = "GPS Button Action Failure: Data Model not created"
+                }
+                
+                DispatchQueue.main.async {
+                    self.displayButtonAction?.text = nil
+                    self.displayButtonAction?.text = actionString
+                }
+            }
+            
+            // This function is called when the getBatteryLevelAndState button is receives the touchUpInside event.
+            func setLabelWithBatteryLevelAndState() {
+                var actionString : String = "Get Battery Level and State";
+                
+                if (self.displayDataModel != nil) {
+                    actionString = (self.displayDataModel?.provideBatteryLevelAndState())!
+                }
+                else {
+                    actionString = "Battery Button Action Failure: Data Model not created"
+                }
+                
+                DispatchQueue.main.async {
+                    self.displayButtonAction?.text = nil
+                    self.displayButtonAction?.text = actionString
+                }
+            }
+            
+            // This function is called when the getNextorkImplementation button is receives the touchUpInside event.
+            func setLabelActionNetwork() {
+                var actionString :String = "Fake Button set to American Express Stock Price"
+                
+                if (self.displayDataModel != nil) {
+                    actionString = (self.displayDataModel?.provideNetworkAccessData())!
+                }
+                else {
+                    actionString = "Network Button Action Failure: Data Model not created"
+                }
+                
+                DispatchQueue.main.async {
+                    self.displayButtonAction?.text = nil
+                    self.displayButtonAction?.text = actionString
+                }
+            }
+            
+            func makeAButton(yButtonStart : CGFloat, buttonTitle: String, underSubview: UIView?) -> UIButton
+            {
+                let thisButton = UIButton.init(type: .system)
+                thisButton.frame = CGRect(x: buttonXInit, y: yButtonStart, width: viewElementWidth, height: buttonHeight)
+                thisButton.setTitle(buttonTitle, for:UIControlState.normal)
+                thisButton.backgroundColor = UIColor.yellow
+                thisButton.setTitleColor(UIColor.black, for: UIControlState.normal)
+                
+                if ((underSubview) == nil) {
+                    self.view.addSubview(thisButton)
+                }
+                else {
+                    self.view.insertSubview(thisButton, belowSubview:underSubview!)
+                }
+                
+                return thisButton;
+            }
+            
+            func makeALabel(yLabelStart : CGFloat, height: CGFloat, underSubview: UIView?) -> UILabel
+            {
+                let thisLabel = UILabel.init()
+                thisLabel.frame = CGRect(x: buttonXInit, y: yLabelStart, width: viewElementWidth, height: height)
+                thisLabel.font = thisLabel.font.withSize(12)     // Reduce the size of the text so that more output fits on a single line
+                thisLabel.lineBreakMode = .byWordWrapping;
+                thisLabel.numberOfLines = 0;                          // Allow the label to grow as necessary
+                thisLabel.textAlignment = NSTextAlignment.center;
+                thisLabel.textColor = UIColor.black;
+                
+                if ((underSubview) == nil) {
+                    self.view.addSubview(thisLabel)
+                }
+                else {
+                    self.view.insertSubview(thisLabel, belowSubview:underSubview!)
+                }
+                
+                return thisLabel;
+            }
+            
+            override func viewDidLoad() {
+                super.viewDidLoad()
+                // rather than assume a particular background color, set the background color so that everything can be seen.
+                self.view.backgroundColor = UIColor.white
+                initFramingValuesOfMyDisplay()
+                if (!self.displayModelLibraryInitialization())
+                {
+                    addButtonAndLabels()
+                }
+                self.view.backgroundColor = UIColor.white
+            }
+            
+            func addButtonAndLabels() -> Void {
+                // If the width of the screen hasn't been used as a base for the size of the sub-views then
+                // this function is not ready to generate the sub-views.
+                if (selfWidth < 1.0) {
+                    return;
+                }
+                var viewElementVerticalLocation: CGFloat = startingVerticalLocation;
+                
+                self.screenTitle = makeALabel(yLabelStart: viewElementVerticalLocation, height: buttonHeight, underSubview: nil)
+                self.screenTitle?.text = "Swift Implementation"
+                viewElementVerticalLocation += buttonVerticalSeparation
+                viewElementVerticalLocation += buttonVerticalSeparation
+                
+                // To prevent memory leaks only create the UIView object if it hasn't already been created
+                //        if (self.getGPSLongitudeAndLatitudeWithTimeStamp == nil) {
+                self.getGPSLongitudeAndLatitudeWithTimeStamp = makeAButton(yButtonStart: viewElementVerticalLocation, buttonTitle: "Get GPS Location with TimeStamp", underSubview: nil)
+                self.getGPSLongitudeAndLatitudeWithTimeStamp?.addTarget(self, action: #selector(setLabelWithGPSLatitudeAndLongitudeWithTimeStampData), for:  .touchUpInside)
+                viewElementVerticalLocation += buttonVerticalSeparation
+                //        }
+                
+                //        if (self.getGPSLongitudeAndLatitudeWithTimeStamp == nil) {
+                self.getBatteryLevelAndState = makeAButton(yButtonStart: viewElementVerticalLocation, buttonTitle: "Get Battery Level and State", underSubview: getGPSLongitudeAndLatitudeWithTimeStamp)
+                self.getBatteryLevelAndState?.addTarget(self, action: #selector(setLabelWithBatteryLevelAndState), for:  .touchUpInside)
+                viewElementVerticalLocation += buttonVerticalSeparation
+                //        }
+                
+                //        if (self.getNextorkImplementation == nil) {
+                self.getNextorkImplementation = makeAButton(yButtonStart: viewElementVerticalLocation, buttonTitle: "Get American Express Stock Price", underSubview: getBatteryLevelAndState)
+                self.getNextorkImplementation?.addTarget(self, action: #selector(setLabelActionNetwork), for:  .touchUpInside)
+                viewElementVerticalLocation += buttonVerticalSeparation
+                //        }
+                
+                
+                //        if (self.displayButtonAction == nil) {
+                self.displayButtonAction = makeALabel(yLabelStart: viewElementVerticalLocation, height: displayLabelHeight, underSubview: getNextorkImplementation)
+                //        }
+            }
+            
+            func displayModelLibraryInitialization() -> CBool {
+                if (self.displayDataModel == nil) {
+                    if let myDelegate = UIApplication.shared.delegate as? AppDelegate {
+                        self.displayDataModel = myDelegate.dataModelLibrary;
+                    }
+                }
+                return (self.displayDataModel == nil)
+            }
+            
+            override func didReceiveMemoryWarning() {
+                super.didReceiveMemoryWarning()
+                // Dispose of any resources that can be recreated.
+            }
+    
+            
+            public required init(coder aDecoder: NSCoder) {
+                super.init(nibName: nil, bundle: nil)
+                if (self.displayDataModel == nil) {
+                    if (self.displayModelLibraryInitialization()) {
+                        abort()
+                    }
+                    self.getGPSLongitudeAndLatitudeWithTimeStamp = nil
+                    self.getGPSLongitudeAndLatitudeWithTimeStamp = nil
+                    self.getNextorkImplementation = nil
+                    self.screenTitle = nil
+                    self.displayButtonAction = nil
+                }
+                initFramingValuesOfMyDisplay()
+            }
+    
+            public init() {
+                super.init(nibName: nil, bundle: nil)
+                if (self.displayDataModel == nil) {
+                    if (self.displayModelLibraryInitialization()) {
+                        abort()
+                    }
+                    self.getGPSLongitudeAndLatitudeWithTimeStamp = nil
+                    self.getGPSLongitudeAndLatitudeWithTimeStamp = nil
+                    self.getNextorkImplementation = nil
+                    self.screenTitle = nil
+                    self.displayButtonAction = nil
+                }
+                initFramingValuesOfMyDisplay()
+            }
+            
+        }
+    
+    }
