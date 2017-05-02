@@ -6,9 +6,10 @@ environments but I am learning.
 
 ## Environtment
 
-OSX - El Capitan  
-Xcode - Version 8.2 (8C38) // swift 3  
-Running in the iPhone 7 simulator.  
+- OSX - El Capitan  
+- Xcode - Version 8.2 (8C38) // swift 3  
+- Running in the iPhone 7 simulator.  
+- Late 2010 17 inch MacBook Pro
 
 ## Programming Challenge:
 
