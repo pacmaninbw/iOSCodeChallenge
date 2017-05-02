@@ -10,7 +10,7 @@ OSX - El Capitan
 Xcode - Version 8.2 (8C38) // swift 3  
 Running in the iPhone 7 simulator.  
 
-##Programming Challenge:
+## Programming Challenge:
 
 Create a static library or iOS Framework using Objective-C that performs the following 3 functions:
 - Collects the GPS location (latitude and longitude) of the user at a point in time
